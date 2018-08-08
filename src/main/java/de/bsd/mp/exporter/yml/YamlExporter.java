@@ -2,6 +2,8 @@ package de.bsd.mp.exporter.yml;
 
 import static org.eclipse.microprofile.metrics.spi.MetricExporter.HttpMethod.GET;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,6 +32,7 @@ public class YamlExporter implements MetricExporter {
 
   private Yaml yaml;
   private Map<MetricRegistry.Type, MetricRegistry> registryMap;
+  private NumberFormat formatter = new DecimalFormat("###,###.##");
 
   public YamlExporter() {
 
@@ -120,7 +123,8 @@ public class YamlExporter implements MetricExporter {
         Gauge gauge = (Gauge) m;
         Number num = (Number) gauge.getValue();
         double dvalue = num.doubleValue();
-        out.put("value",dvalue);
+        String formatted = formatter.format(dvalue);
+        out.put("value",formatted);
         break;
       case COUNTER:
         Counter counter = (Counter) m;
